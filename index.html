@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Happy Valentine My Favorit Person</title>
+    <title>Happy Valentine My favorit person</title>
     <style>
         body {
             margin: 0;
@@ -18,12 +18,15 @@
             overflow: hidden;
         }
 
-        /* Background Hati Melayang */
+        /* Container Hati Melayang */
         .bg-hearts {
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%;
             overflow: hidden;
-            z-index: -1;
+            z-index: 1; /* Pastikan di depan background hitam */
             pointer-events: none;
         }
 
@@ -50,19 +53,18 @@
             max-width: 500px;
             text-align: center;
             backdrop-filter: blur(15px);
-            /* BORDERLESS TOTAL */
             border: none !important; 
             outline: none !important;
             margin: 20px;
             position: relative;
-            z-index: 10;
+            z-index: 10; /* Biar tetap di depan hujan hati */
             min-height: 350px;
             display: flex;
             flex-direction: column;
             justify-content: center;
         }
 
-        /* ANIMASI FADE KONSISTEN 1.2 DETIK */
+        /* Animasi Transisi 1.2s */
         #introSection, #preludeSection, .step-container, #wishSection {
             transition: opacity 1.2s ease-in-out;
             opacity: 0;
@@ -74,12 +76,6 @@
             line-height: 1.6;
             color: #ddd;
             margin-bottom: 25px;
-            text-align: center;
-        }
-
-        .prelude-text {
-            font-weight: 500;
-            color: #ff4d6d;
         }
 
         #heartTrigger {
@@ -87,7 +83,7 @@
             cursor: pointer;
             animation: heartbeat 1.2s infinite;
             text-shadow: 0 0 20px rgba(255, 77, 109, 0.5);
-            display: none; /* Muncul setelah intro diketik */
+            display: none;
             opacity: 0;
             transition: opacity 1.2s;
         }
@@ -182,7 +178,7 @@
     </div>
     
     <div id="mainContent" style="display:none;">
-        <h2 id="valentineTitle" style="color: #ff4d6d; opacity: 0; transition: opacity 1.2s; margin-bottom: 25px;">Happy Valentine My Favorit Person ✨</h2>
+        <h2 id="valentineTitle" style="color: #ff4d6d; opacity: 0; transition: opacity 1.2s; margin-bottom: 25px;">Happy Valentine My favorit person ✨</h2>
         
         <div id="step1" class="step-container">
             <p class="text-part" id="t1"></p>
@@ -214,7 +210,7 @@
     <div id="wishSection">
         <p style="color: #ff4d6d; font-weight: bold; margin-bottom: 15px;">Tulis keinginan kamu di sini ya... 🥰</p>
         <form id="my-form" action="https://formspree.io/f/mqedqzla" method="POST">
-            <textarea name="pesan_lia" rows="3" placeholder="Contoh: Pengen coklat atau nobar lagi atau mungkin kamu ada pesan-pesan buat aku..." required></textarea>
+            <textarea name="pesan_lia" rows="3" placeholder="Contoh: Pengen coklat atau nobar lagi..." required></textarea>
             <button style="background: #ff4d6d; color: white; margin-top: 15px; width: 100%; border:none; padding:12px; border-radius:10px; cursor:pointer; font-weight:bold;">Kirim Pesan</button>
             <p id="status" style="margin-top:10px; color:#ff4d6d;"></p>
         </form>
@@ -233,8 +229,9 @@
         { t: "t5", i: "i5", s: "step5", text: "Nanti kalau kamu lagi santai dan emang mau, kita sesekali ngobrol lewat call WA aja yuk? Biar lebih privat aja suasananya... 📱☕ Mungkin kamu aneh denger ini dari aku yg kamu anggap adik, tapi inilah perasaan aku yang paling jujur... Anyway, di hari Valentine ini... kamu mau apa? Kabarin aku ya... ✨" }
     ];
 
-    /* MUNCULIN INTRO TYPEWRITER PAS HALAMAN SELESAI PROSES */
+    /* SYSTEM LOADING & HUJAN HATI */
     window.onload = function() {
+        createBgHearts(); // Jalankan hujan hati
         const introSec = document.getElementById('introSection');
         introSec.style.display = 'block';
         setTimeout(() => { 
@@ -253,7 +250,6 @@
         audio.volume = 0; 
         audio.play().catch(e => console.log("Menunggu interaksi"));
 
-        /* AUDIO FADE IN VOLUME */
         let vol = 0;
         const fadeInterval = setInterval(() => {
             if (vol < 0.9) { vol += 0.05; audio.volume = vol; } 
@@ -276,7 +272,7 @@
                             preludeSec.style.display = 'none';
                             startMainContent();
                         }, 1200);
-                    }, 3000); // Jeda setelah prelude beres
+                    }, 3000);
                 });
             }, 100);
         }, 1200);
@@ -312,13 +308,13 @@
                     stepEl.style.display = 'none';
                     runStep(index + 1);
                 }, 1200); 
-            }, 5500); // Nunggu baca + liat foto
+            }, 5500);
         });
     }
 
-    /* FUNGSI TYPEWRITER UNTUK SEMUA */
     function typeWriterCustom(id, text, speed, callback) {
         const element = document.getElementById(id);
+        element.innerHTML = ""; // Kosongkan dulu
         element.classList.add('typing-cursor');
         let i = 0;
         function type() {
@@ -332,6 +328,20 @@
             }
         }
         type();
+    }
+
+    function createBgHearts() {
+        const container = document.querySelector('.bg-hearts');
+        if (!container) return; // Mencegah error kalau div-nya nggak ada
+        for (let i = 0; i < 20; i++) {
+            const heart = document.createElement('div');
+            heart.classList.add('heart-particle');
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.width = heart.style.height = (Math.random() * 12 + 6) + 'px';
+            heart.style.animationDuration = (Math.random() * 15 + 10) + 's';
+            heart.style.animationDelay = Math.random() * 5 + 's';
+            container.appendChild(heart);
+        }
     }
 
     function lari() {
@@ -355,20 +365,6 @@
         }, 1200);
     }
 
-    function createBgHearts() {
-        const container = document.querySelector('.bg-hearts');
-        for (let i = 0; i < 15; i++) {
-            const heart = document.createElement('div');
-            heart.classList.add('heart-particle');
-            heart.style.left = Math.random() * 100 + 'vw';
-            heart.style.width = heart.style.height = (Math.random() * 10 + 5) + 'px';
-            heart.style.animationDuration = (Math.random() * 15 + 10) + 's';
-            heart.style.animationDelay = Math.random() * 5 + 's';
-            container.appendChild(heart);
-        }
-    }
-    createBgHearts();
-
     var form = document.getElementById("my-form");
     form.addEventListener("submit", async function(e) {
         e.preventDefault();
@@ -378,7 +374,7 @@
             body: data,
             headers: {'Accept': 'application/json'}
         }).then(response => {
-            document.getElementById("status").innerHTML = "Makasih Kak, pesannya udah sampe hati ke Aku! 🥰";
+            document.getElementById("status").innerHTML = "Makasih Kak, pesannya udah sampe ke aku! 🥰";
             form.reset();
         });
     });

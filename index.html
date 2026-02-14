@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Valentine My Favorit Person</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #eee;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Background Hati Melayang */
+        .bg-hearts {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            overflow: hidden;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .heart-particle {
+            position: absolute;
+            bottom: -20px;
+            background-color: rgba(255, 77, 109, 0.6);
+            transform: rotate(45deg);
+            animation: floatUp linear infinite;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) rotate(45deg); opacity: 0; }
+            10% { opacity: 1; }
+            100% { transform: translateY(-110vh) rotate(45deg); opacity: 0; }
+        }
+
+        .container {
+            background: rgba(20, 20, 20, 0.9);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.9);
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+            backdrop-filter: blur(15px);
+            /* BORDERLESS TOTAL */
+            border: none !important; 
+            outline: none !important;
+            margin: 20px;
+            position: relative;
+            z-index: 10;
+            min-height: 350px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* ANIMASI FADE KONSISTEN 1.2 DETIK */
+        #introSection, #preludeSection, .step-container, #wishSection {
+            transition: opacity 1.2s ease-in-out;
+            opacity: 0;
+            display: none;
+        }
+
+        .intro-text, .prelude-text {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #ddd;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .prelude-text {
+            font-weight: 500;
+            color: #ff4d6d;
+        }
+
+        #heartTrigger {
+            font-size: 80px;
+            cursor: pointer;
+            animation: heartbeat 1.2s infinite;
+            text-shadow: 0 0 20px rgba(255, 77, 109, 0.5);
+            display: none; /* Muncul setelah intro diketik */
+            opacity: 0;
+            transition: opacity 1.2s;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .memory-img {
+            width: 100%;
+            border-radius: 15px;
+            margin-top: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .fade-in-img {
+            opacity: 1 !important;
+            transform: translateY(0) !important;
+        }
+
+        .text-part {
+            font-size: 15px;
+            line-height: 1.6;
+            margin: 15px 0;
+            min-height: 1.6em;
+            color: #ddd;
+            text-align: left;
+        }
+
+        .typing-cursor::after {
+            content: '|';
+            animation: blink 0.7s infinite;
+            color: #ff4d6d;
+        }
+
+        @keyframes blink { 50% { opacity: 0; } }
+
+        .buttons {
+            display: none;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+            position: relative;
+            opacity: 0;
+            transition: opacity 1.2s;
+        }
+
+        button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        #btnMau { background: #ff4d6d; color: white; }
+        #btnGak { background: #444; color: #ccc; position: absolute; }
+
+        textarea {
+            width: 100%;
+            border-radius: 10px;
+            padding: 12px;
+            background: #222;
+            color: white;
+            border: 1px solid #444;
+            resize: none;
+            outline: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="bg-hearts"></div>
+
+<audio id="bgMusic" loop>
+    <source src="Neck Deep - Wish You Were Here.mp3" type="audio/mpeg">
+</audio>
+
+<div class="container">
+    <div id="introSection">
+        <p class="intro-text" id="introTypewriter"></p>
+        <div id="heartTrigger" onclick="handleHeartClick()">💖</div>
+    </div>
+
+    <div id="preludeSection">
+        <p class="prelude-text" id="preludeTypewriter"></p>
+    </div>
+    
+    <div id="mainContent" style="display:none;">
+        <h2 id="valentineTitle" style="color: #ff4d6d; opacity: 0; transition: opacity 1.2s; margin-bottom: 25px;">Happy Valentine My Favorit Person ✨</h2>
+        
+        <div id="step1" class="step-container">
+            <p class="text-part" id="t1"></p>
+            <img src="with my fav person (1).png" id="i1" class="memory-img">
+        </div>
+        <div id="step2" class="step-container">
+            <p class="text-part" id="t2"></p>
+            <img src="with my fav person (2).png" id="i2" class="memory-img">
+        </div>
+        <div id="step3" class="step-container">
+            <p class="text-part" id="t3"></p>
+            <img src="with my fav person (3).png" id="i3" class="memory-img">
+        </div>
+        <div id="step4" class="step-container">
+            <p class="text-part" id="t4"></p>
+            <img src="with my fav person (4).png" id="i4" class="memory-img">
+        </div>
+        <div id="step5" class="step-container">
+            <p class="text-part" id="t5"></p>
+            <img src="with my fav person (5).png" id="i5" class="memory-img">
+        </div>
+
+        <div class="buttons" id="btnGroup">
+            <button id="btnMau" onclick="showWish()">Mau!</button>
+            <button id="btnGak" onmouseover="lari()">Gak Mau</button>
+        </div>
+    </div>
+
+    <div id="wishSection">
+        <p style="color: #ff4d6d; font-weight: bold; margin-bottom: 15px;">Tulis keinginan kamu di sini ya... 🥰</p>
+        <form id="my-form" action="https://formspree.io/f/mqedqzla" method="POST">
+            <textarea name="pesan_lia" rows="3" placeholder="Contoh: Pengen coklat atau nobar lagi atau mungkin kamu ada pesan-pesan buat aku..." required></textarea>
+            <button style="background: #ff4d6d; color: white; margin-top: 15px; width: 100%; border:none; padding:12px; border-radius:10px; cursor:pointer; font-weight:bold;">Kirim Pesan</button>
+            <p id="status" style="margin-top:10px; color:#ff4d6d;"></p>
+        </form>
+    </div>
+</div>
+
+<script>
+    const introTxt = "Aku punya sesuatu buat kamu nih, kalo kamu mau tau, klik love ini ya... ✨";
+    const preludeTxt = "Makasih yah udah klik love nya... ✨\n\nMungkin ini akan sedikit panjang, tapi ini spesial buat kamu. Jadi, liat dan dengerin sampai habis yah... 🥰🎶";
+    
+    const script = [
+        { t: "t1", i: "i1", s: "step1", text: "Semalem pas liat di Lemo ada yang caper ke kamu, aku kan emang ada rasa geli, tapi jujur aku agak panas gimana gitu... tapi ya wajar sih namanya juga orangnya manis, pasti banyak yang merhatiin kan? 🤭😁😜" },
+        { t: "t2", i: "i2", s: "step2", text: "Tapi pas kamu malah milih nyusul aku ke AU, rasanya langsung adem banget. Apalagi pas kamu bilang uninstall aplikasinya ya walapun itu memang karna hp kamu tapi... makasih ya udah bikin aku ngerasa spesial! 🤭✨" },
+        { t: "t3", i: "i3", s: "step3", text: "Makasih udah milih buat habisin waktu sama aku dibanding dengerin yang gak jelas di luar sana. Momen tenang kayak gini nih yang paling aku hargai... 🥰🍃" },
+        { t: "t4", i: "i4", s: "step4", text: "Oya, sampai sekarang suara kamu yang semalem masih terngiang-ngiang terus,dari ketawa kecilnya pun manis banget kalau didenger langsung, aaaaaaaarrrrrrggggg manis bgt sial... 🙈🤣" },
+        { t: "t5", i: "i5", s: "step5", text: "Nanti kalau kamu lagi santai dan emang mau, kita sesekali ngobrol lewat call WA aja yuk? Biar lebih privat aja suasananya... 📱☕ Mungkin kamu aneh denger ini dari aku yg kamu anggap adik, tapi inilah perasaan aku yang paling jujur... Anyway, di hari Valentine ini... kamu mau apa? Kabarin aku ya... ✨" }
+    ];
+
+    /* MUNCULIN INTRO TYPEWRITER PAS HALAMAN SELESAI PROSES */
+    window.onload = function() {
+        const introSec = document.getElementById('introSection');
+        introSec.style.display = 'block';
+        setTimeout(() => { 
+            introSec.style.opacity = 1; 
+            typeWriterCustom('introTypewriter', introTxt, 40, () => {
+                const heart = document.getElementById('heartTrigger');
+                heart.style.display = 'inline-block';
+                setTimeout(() => { heart.style.opacity = 1; }, 100);
+            });
+        }, 100);
+    };
+
+    function handleHeartClick() {
+        const audio = document.getElementById('bgMusic');
+        audio.currentTime = 4; // Lompat ke detik 4
+        audio.volume = 0; 
+        audio.play().catch(e => console.log("Menunggu interaksi"));
+
+        /* AUDIO FADE IN VOLUME */
+        let vol = 0;
+        const fadeInterval = setInterval(() => {
+            if (vol < 0.9) { vol += 0.05; audio.volume = vol; } 
+            else { audio.volume = 1; clearInterval(fadeInterval); }
+        }, 200);
+
+        const intro = document.getElementById('introSection');
+        intro.style.opacity = 0;
+
+        setTimeout(() => {
+            intro.style.display = 'none';
+            const preludeSec = document.getElementById('preludeSection');
+            preludeSec.style.display = 'block';
+            setTimeout(() => { 
+                preludeSec.style.opacity = 1; 
+                typeWriterCustom('preludeTypewriter', preludeTxt, 40, () => {
+                    setTimeout(() => {
+                        preludeSec.style.opacity = 0;
+                        setTimeout(() => {
+                            preludeSec.style.display = 'none';
+                            startMainContent();
+                        }, 1200);
+                    }, 3000); // Jeda setelah prelude beres
+                });
+            }, 100);
+        }, 1200);
+    }
+
+    function startMainContent() {
+        document.getElementById('mainContent').style.display = 'block';
+        setTimeout(() => { document.getElementById('valentineTitle').style.opacity = 1; }, 500);
+        runStep(0);
+    }
+
+    function runStep(index) {
+        if (index >= script.length) {
+            const btnGrp = document.getElementById('btnGroup');
+            btnGrp.style.display = 'flex';
+            setTimeout(() => { btnGrp.style.opacity = 1; }, 50);
+            return;
+        }
+
+        const data = script[index];
+        const stepEl = document.getElementById(data.s);
+        const textEl = document.getElementById(data.t);
+        const imgEl = document.getElementById(data.i);
+
+        stepEl.style.display = 'block';
+        setTimeout(() => { stepEl.style.opacity = 1; }, 50);
+        
+        typeWriterCustom(data.t, data.text, 40, () => {
+            setTimeout(() => { imgEl.classList.add('fade-in-img'); }, 300);
+            setTimeout(() => {
+                stepEl.style.opacity = 0;
+                setTimeout(() => {
+                    stepEl.style.display = 'none';
+                    runStep(index + 1);
+                }, 1200); 
+            }, 5500); // Nunggu baca + liat foto
+        });
+    }
+
+    /* FUNGSI TYPEWRITER UNTUK SEMUA */
+    function typeWriterCustom(id, text, speed, callback) {
+        const element = document.getElementById(id);
+        element.classList.add('typing-cursor');
+        let i = 0;
+        function type() {
+            if (i < text.length) {
+                element.innerHTML += text.charAt(i);
+                i++;
+                setTimeout(type, speed);
+            } else {
+                element.classList.remove('typing-cursor');
+                if (callback) callback();
+            }
+        }
+        type();
+    }
+
+    function lari() {
+        const btn = document.getElementById('btnGak');
+        const container = document.querySelector('.container');
+        const rect = container.getBoundingClientRect();
+        const x = Math.random() * (rect.width - btn.offsetWidth - 20);
+        const y = Math.random() * (rect.height - btn.offsetHeight - 20);
+        btn.style.left = x + 'px';
+        btn.style.top = y + 'px';
+    }
+
+    function showWish() {
+        const main = document.getElementById('mainContent');
+        main.style.opacity = 0;
+        setTimeout(() => {
+            main.style.display = 'none';
+            const wish = document.getElementById('wishSection');
+            wish.style.display = 'block';
+            setTimeout(() => { wish.style.opacity = 1; }, 50);
+        }, 1200);
+    }
+
+    function createBgHearts() {
+        const container = document.querySelector('.bg-hearts');
+        for (let i = 0; i < 15; i++) {
+            const heart = document.createElement('div');
+            heart.classList.add('heart-particle');
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.width = heart.style.height = (Math.random() * 10 + 5) + 'px';
+            heart.style.animationDuration = (Math.random() * 15 + 10) + 's';
+            heart.style.animationDelay = Math.random() * 5 + 's';
+            container.appendChild(heart);
+        }
+    }
+    createBgHearts();
+
+    var form = document.getElementById("my-form");
+    form.addEventListener("submit", async function(e) {
+        e.preventDefault();
+        var data = new FormData(e.target);
+        fetch(e.target.action, {
+            method: 'POST',
+            body: data,
+            headers: {'Accept': 'application/json'}
+        }).then(response => {
+            document.getElementById("status").innerHTML = "Makasih Kak, pesannya udah sampe hati ke Aku! 🥰";
+            form.reset();
+        });
+    });
+</script>
+</body>
+</html>
